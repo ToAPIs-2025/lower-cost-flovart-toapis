@@ -1,0 +1,72 @@
+{
+  "id": "toapis-image",
+  "name": "ToAPIs experimental image",
+  "version": "0.1.0",
+  "endpoint": "https://toapis.com",
+  "capabilities": [
+    "text-to-image"
+  ],
+  "supportedReferenceKinds": [],
+  "supportedReferenceRoles": [],
+  "maxReferences": {
+    "image": 0,
+    "video": 0,
+    "audio": 0
+  },
+  "auth": {
+    "header": "Authorization",
+    "prefix": "Bearer "
+  },
+  "request": {
+    "method": "POST",
+    "path": "v1/images/generations",
+    "body": {
+      "model": "gpt-image-2-vip",
+      "n": 1,
+      "size": "1:1",
+      "resolution": "1K",
+      "quality": "low",
+      "prompt": {
+        "$path": "input.prompt"
+      }
+    }
+  },
+  "response": {
+    "kind": "image",
+    "taskIdPath": "id",
+    "statusPath": "status",
+    "mediaUrlPath": "result.data.0.url",
+    "successStatuses": [
+      "completed"
+    ],
+    "failureStatuses": [
+      "failed",
+      "cancelled",
+      "expired"
+    ],
+    "errorPath": "error.message"
+  },
+  "poll": {
+    "request": {
+      "method": "GET",
+      "path": "v1/images/generations/{{taskId}}"
+    },
+    "response": {
+      "kind": "image",
+      "taskIdPath": "id",
+      "statusPath": "status",
+      "mediaUrlPath": "result.data.0.url",
+      "successStatuses": [
+        "completed"
+      ],
+      "failureStatuses": [
+        "failed",
+        "cancelled",
+        "expired"
+      ],
+      "errorPath": "error.message"
+    },
+    "intervalMs": 1000,
+    "timeoutMs": 1200000
+  }
+}

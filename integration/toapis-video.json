@@ -1,0 +1,85 @@
+{
+  "id": "toapis-video",
+  "name": "ToAPIs experimental video",
+  "version": "0.1.0",
+  "endpoint": "https://toapis.com",
+  "capabilities": [
+    "image-to-video"
+  ],
+  "supportedReferenceKinds": [
+    "image"
+  ],
+  "supportedReferenceRoles": [
+    "first_frame"
+  ],
+  "maxReferences": {
+    "image": 1,
+    "video": 0,
+    "audio": 0
+  },
+  "auth": {
+    "header": "Authorization",
+    "prefix": "Bearer "
+  },
+  "request": {
+    "method": "POST",
+    "path": "v1/videos/generations",
+    "body": {
+      "model": "seedance-2-5",
+      "duration": 4,
+      "resolution": "480p",
+      "aspect_ratio": "16:9",
+      "generate_audio": false,
+      "output_format": "mp4",
+      "prompt": {
+        "$path": "input.prompt"
+      },
+      "image_with_roles": [
+        {
+          "url": {
+            "$path": "input.references.0.href"
+          },
+          "role": "first_frame"
+        }
+      ]
+    }
+  },
+  "response": {
+    "kind": "video",
+    "taskIdPath": "id",
+    "statusPath": "status",
+    "mediaUrlPath": "result.data.0.url",
+    "successStatuses": [
+      "completed"
+    ],
+    "failureStatuses": [
+      "failed",
+      "cancelled",
+      "expired"
+    ],
+    "errorPath": "error.message"
+  },
+  "poll": {
+    "request": {
+      "method": "GET",
+      "path": "v1/videos/generations/{{taskId}}"
+    },
+    "response": {
+      "kind": "video",
+      "taskIdPath": "id",
+      "statusPath": "status",
+      "mediaUrlPath": "result.data.0.url",
+      "successStatuses": [
+        "completed"
+      ],
+      "failureStatuses": [
+        "failed",
+        "cancelled",
+        "expired"
+      ],
+      "errorPath": "error.message"
+    },
+    "intervalMs": 1000,
+    "timeoutMs": 1200000
+  }
+}
